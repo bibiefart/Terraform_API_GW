@@ -37,6 +37,7 @@ def sqs_get_message():
     logging.info(f"RESPONSE FROM SQS -------->>>>>>>>>>    {response}")
     message = response['Messages'][0]
     receipt_handle = message['ReceiptHandle']
+    body=response['Messages'][0]['Body']
 
     # Delete received message from queue
     sqs.delete_message(
@@ -44,10 +45,11 @@ def sqs_get_message():
         ReceiptHandle=receipt_handle
     )
     logging.info('Received and deleted message: %s' % message)
-
+    logging.info('Message Body: ------------>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s' % body)
+    return body
 def lambda_handler(event, context):
   logging.info(f"## LAMBDA RECEIVED MSG FROM SQS")
-  sqs_get_message()
+  body = sqs_get_message()
   now = datetime.now()
   date_time = now.strftime('%m/%d/%Y, %H:%M:%S:%p')
 
