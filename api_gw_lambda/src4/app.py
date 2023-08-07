@@ -18,7 +18,8 @@ def get_queue_url(queue_name):
 
 def sqs_get_message():
     queue_name = os.environ.get('SQS_NAME')
-    sqs = boto3.client('sqs')
+    region = os.environ.get('REGION')
+    sqs = boto3.client("sqs", region)
     queue_url = get_queue_url(queue_name)
     # Receive message from SQS queue
     response = sqs.receive_message(
@@ -31,7 +32,7 @@ def sqs_get_message():
             'All'
         ],
         VisibilityTimeout=0,
-        WaitTimeSeconds=10
+        WaitTimeSeconds=0
     )
     logging.info(f"RESPONSE FROM SQS -------->>>>>>>>>>    {response}")
     message = response['Messages'][0]
