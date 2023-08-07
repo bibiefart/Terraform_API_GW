@@ -82,6 +82,12 @@ data "archive_file" "lambda_zip3" {
   output_path = "${path.module}/src3.zip"
 }
 
+data "archive_file" "lambda_zip4" {
+  type = "zip"
+
+  source_dir  = "${path.module}/src4"
+  output_path = "${path.module}/src4.zip"
+}
 
 
 resource "aws_s3_object" "this" {
@@ -111,6 +117,16 @@ resource "aws_s3_object" "this3" {
   etag = filemd5(data.archive_file.lambda_zip3.output_path)
 }
 
+resource "aws_s3_object" "this4" {
+  bucket = aws_s3_bucket.lambda_bucket.id
+
+  key    = "src4.zip"
+  source = data.archive_file.lambda_zip4.output_path
+
+  etag = filemd5(data.archive_file.lambda_zip4.output_path)
+}
+
+
 //Define lambda function
 resource "aws_lambda_function" "apigw_lambda_ddb" {
   function_name = "${var.lambda_name}-${random_string.random.id}"
@@ -129,6 +145,8 @@ resource "aws_lambda_function" "apigw_lambda_ddb" {
   environment {
     variables = {
       DDB_TABLE = var.dynamodb_table
+      SQS_NAME = var.sqs_name
+      REGION = var.aws_region
     }
   }
   depends_on = [aws_cloudwatch_log_group.lambda_logs]
@@ -187,6 +205,31 @@ resource "aws_lambda_function" "apigw_lambda_ddb_delete" {
 
 
 
+//Define lambda function
+resource "aws_lambda_function" "apigw_lambda_sqs_dequeue" {
+  function_name = "${var.lambda_sqs_name}-${random_string.random.id}"
+  description   = "serverlessland pattern"
+
+  s3_bucket = aws_s3_bucket.lambda_bucket.id
+  s3_key    = aws_s3_object.this4.key
+
+  runtime = "python3.8"
+  handler = "app.lambda_handler"
+
+  source_code_hash = data.archive_file.lambda_zip4.output_base64sha256
+
+  role = aws_iam_role.lambda_exec.arn
+
+  environment {
+    variables = {
+      DDB_TABLE = var.dynamodb_table
+      SQS_NAME = var.sqs_name
+    }
+  }
+  depends_on = [aws_cloudwatch_log_group.lambda_get_logs]
+}
+
+
 
 resource "aws_cloudwatch_log_group" "lambda_logs" {
   name = "/aws/lambda/${var.lambda_name}-${random_string.random.id}"
@@ -206,6 +249,12 @@ resource "aws_cloudwatch_log_group" "lambda_delete_logs" {
   retention_in_days = var.lambda_log_retention
 }
 
+
+resource "aws_cloudwatch_log_group" "lambda_sqs_logs" {
+  name = "/aws/lambda/${var.lambda_sqs_name}-${random_string.random.id}"
+
+  retention_in_days = var.lambda_log_retention
+}
 
 resource "aws_iam_role" "lambda_exec" {
   name = "LambdaDdbPost"
@@ -262,11 +311,27 @@ resource "aws_iam_policy" "lambda_exec_role" {
 POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_policy" {
-  role       = aws_iam_role.lambda_exec.name
-  policy_arn = aws_iam_policy.lambda_exec_role.arn
+data "template_file" "gateway_policy" {
+  template = file("policies/post-lambda-to-sqs-permission.json")
 }
 
+resource "aws_iam_policy" "sqs_policy" {
+  name = "lambba-sqs-cloudwatch-policy"
+
+  policy = data.template_file.gateway_policy.rendered
+}
+
+
+
+resource "aws_iam_role_policy_attachment" "lambda_policy1" {
+   role       = aws_iam_role.lambda_exec.name
+   policy_arn =aws_iam_policy.lambda_exec_role.arn
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_policy" {
+   role       = aws_iam_role.lambda_exec.name
+   policy_arn =aws_iam_policy.sqs_policy.arn
+}
 #========================================================================
 // API Gateway section
 #========================================================================

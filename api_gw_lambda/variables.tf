@@ -14,6 +14,13 @@ variable "s3_bucket_prefix" {
 
 }
 
+variable "sqs_name" {
+  description = "name of sqs queue"
+  type = string
+  default = "apigateway-queue"
+
+}
+
 variable "dynamodb_table" {
   description = "name of the ddb table"
   type = string
@@ -42,6 +49,14 @@ variable "lambda_delete_name" {
 
 }
 
+variable "lambda_sqs_name" {
+  description = "name of the lambda function"
+  type = string
+  default = "pattern-movies-sqs"
+
+}
+
+
 variable "apigw_name" {
   description = "name of the lambda function"
   type = string
@@ -59,4 +74,22 @@ variable "apigw_log_retention" {
   description = "api gwy log retention in days"
   type = number
   default = 7
+}
+
+
+variable "environment" {
+    description = "Env"
+    default     = "dev"
+}
+
+variable "name" {
+    description = "Application Name"
+    type        = string
+    default     = "bibi"
+}
+
+
+locals {
+    description = "Aplication Name"
+    app_name = "${var.name}-${var.environment}"
 }
