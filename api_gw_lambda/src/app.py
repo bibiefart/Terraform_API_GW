@@ -45,7 +45,7 @@ def sqs_send_message(body):
                 'StringValue': '6'
             }
         },
-        MessageBody=(body)
+        MessageBody=(f"{body}")
     )
 
     logging.info(f"SQS message ID: --->>>> {response['MessageId']}")
