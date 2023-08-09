@@ -16,9 +16,9 @@ terraform {
 
   required_version = ">= 0.14.9"
   backend "s3" {
-    bucket = var.s3_bucket_prefix
+    bucket = "bibi-s3-v4"
     key    = "ftstate/backup"
-    region = "us-east-1"
+    region = "eu-west-1"
   }
 }
 
