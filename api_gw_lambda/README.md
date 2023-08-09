@@ -60,9 +60,7 @@ curl -X POST '<your http api endpoint>'/movies
 ```
 # Send an HTTP POST request an include a request body in the format below and the lambda function will create a new item in the dynamodb table
 
-curl -X POST '<your http api endpoint>'/movies \
-> --header 'Content-Type: application/json' \
-> -d '{"year":1977, "title":"Starwars"}' 
+curl -X POST '<your http api endpoint>'/movies --header 'Content-Type: application/json' -d '{"year":1977, "title":"Starwars"}' 
 
 #sample output
 
