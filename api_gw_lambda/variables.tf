@@ -93,3 +93,4 @@ locals {
     description = "Aplication Name"
     app_name = "${var.name}-${var.environment}"
 }
+

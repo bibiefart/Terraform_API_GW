@@ -28,6 +28,11 @@ provider "aws" {
   region = var.aws_region
 }
 
+module "royal_cognito" {
+  source = "./cognito"
+}
+
+
 resource "random_string" "random" {
   length           = 4
   special          = false
@@ -341,10 +346,33 @@ resource "aws_iam_role_policy_attachment" "lambda_policy" {
 #========================================================================
 // API Gateway section
 #========================================================================
+#resource "aws_api_gateway_authorizer" "api_authorizer" {
+#  name          = "CognitoUserPoolAuthorizer"
+#  type          = "COGNITO_USER_POOLS"
+#  rest_api_id   = aws_apigatewayv2_api.http_lambda.id
+#  provider_arns = module.royal_cognito.royal_cognito_user_pool_arn
+#}
+
+
+resource "aws_apigatewayv2_authorizer" "auth" {
+  api_id           = aws_apigatewayv2_api.http_lambda.id
+  authorizer_type  = "JWT"
+  identity_sources = ["$request.header.Authorization"]
+  name             = "cognito-authorizer"
+
+  jwt_configuration {
+    audience = [module.royal_cognito.royal_user_pool_client_id]
+    issuer   = "https://${module.royal_cognito.royal_cognito_user_pool_endpoint}"
+  }
+}
+
 
 resource "aws_apigatewayv2_api" "http_lambda" {
   name          = "${var.apigw_name}-${random_string.random.id}"
   protocol_type = "HTTP"
+  lifecycle {
+  create_before_destroy = true
+  }
 }
 
 resource "aws_apigatewayv2_stage" "default" {
@@ -386,6 +414,10 @@ resource "aws_apigatewayv2_route" "post" {
 
   route_key = "POST /movies"
   target    = "integrations/${aws_apigatewayv2_integration.apigw_lambda.id}"
+
+  authorization_type = "JWT"
+  authorizer_id = aws_apigatewayv2_authorizer.auth.id
+
 }
 
 
@@ -403,6 +435,9 @@ resource "aws_apigatewayv2_route" "get" {
 
   route_key = "GET /movies_get"
   target    = "integrations/${aws_apigatewayv2_integration.apigw_lambda_get.id}"
+
+  authorization_type = "JWT"
+  authorizer_id = aws_apigatewayv2_authorizer.auth.id
 }
 
 
@@ -419,6 +454,9 @@ resource "aws_apigatewayv2_route" "delete" {
 
   route_key = "DELETE /movies_delete"
   target    = "integrations/${aws_apigatewayv2_integration.apigw_lambda_delete.id}"
+
+  authorization_type = "JWT"
+  authorizer_id = aws_apigatewayv2_authorizer.auth.id
 }
 
 

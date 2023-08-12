@@ -17,3 +17,22 @@ output "apigwy_log_group" {
 
   value = aws_cloudwatch_log_group.api_gw.id
 }
+
+output "royal_user_pool_id" {
+    value = module.royal_cognito.royal_user_pool_id
+}
+
+output "royal_user_pool_client_id" {
+    value =  module.royal_cognito.royal_user_pool_client_id
+}
+
+output "royal_cognito_user_pool_name" {
+    value =  module.royal_cognito.royal_cognito_user_pool_name
+}
+
+output "royal_cognito_user_pool_arn" {
+    value =  module.royal_cognito.royal_cognito_user_pool_arn
+}
+output "royal_cognito_user_pool_endpoint" {
+    value =  module.royal_cognito.royal_cognito_user_pool_endpoint
+}

@@ -1,3 +1,12 @@
+# Amazon Coginito:
+
+https://medium.com/carlos-hernandez/user-control-with-cognito-and-api-gateway-4c3d99b2f414
+
+# Cognito Register User:
+1. register user --> aws cognito-idp sign-up --client-id 2shdrg54eo8hengpe0iu18tv7q  --username bibiefrat --password a3bAcd01~ --user-attributes Name=name,Value="bibi" Name=email,Value="bibi.efrat@gmail.com"
+2. skip email auth --> aws cognito-idp admin-confirm-sign-up  --user-pool-id eu-west-1_CNcmtPD5E --username bibiefrat
+3. get the token -->  aws cognito-idp initiate-auth --client-id 6ugqk05u6lh14hcarfmi06h7ej  --auth-flow USER_PASSWORD_AUTH --auth-parameters USERNAME=bibiefrat,PASSWORD=a3bAcd01~ --query 'AuthenticationResult.IdToken' --output text
+
 # Amazon API Gateway to AWS Lambda to Amazon DynamoDB
 
 This pattern explains how to deploy a sample application using Amazon API Gateway, AWS Lambda, and Amazon DynamoDB with terraform. When an HTTP POST request is made to the Amazon API Gateway endpoint, the AWS Lambda function is invoked and inserts an item into the Amazon DynamoDB table.
@@ -46,6 +55,7 @@ Check the dynamodb table to make sure new items have been created.
 
 
 ```
+
 # Send an HTTP POST request without a request body and the lambda function will add a default item to the dynamodb table
 
 curl -X POST '<your http api endpoint>'/movies
@@ -59,6 +69,8 @@ curl -X POST '<your http api endpoint>'/movies
 
 ```
 # Send an HTTP POST request an include a request body in the format below and the lambda function will create a new item in the dynamodb table
+
+we need to send the request with the token we got fron cognito   ---> see above cognito token
 
 curl -X POST '<your http api endpoint>'/movies --header 'Content-Type: application/json' -d '{"year":1977, "title":"Starwars"}' 
 
@@ -116,3 +128,5 @@ curl -X DELETE '<your http api endpoint>'/movies_delete  --header 'Content-Type:
 Copyright 2022 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 
 SPDX-License-Identifier: MIT-0
+
+

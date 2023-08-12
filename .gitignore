@@ -1,6 +1,7 @@
 # Local .terraform directories
 /.terraform/
 /api_gw_lambda/.terraform/
+/api_gw_lambda/cognito/.terraform
 # .tfstate files
 *.tfstate
 *.tfstate.*
