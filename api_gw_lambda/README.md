@@ -37,8 +37,9 @@ Important: this application uses various AWS services and there are costs associ
     terraform init
     ```
 1. From the command line, apply the configuration in the main.tf file:
-    ```
-    terraform apply
+    ```bash
+   cd /media/bibi/Volume/Share/Pycharm/Terraform/api_gw_lambda
+   terraform apply
     ```
 1. During the prompts:
     * Enter yes
