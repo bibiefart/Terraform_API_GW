@@ -111,8 +111,8 @@ curl -X DELETE '<your http api endpoint>'/movies_delete  --header 'Content-Type:
 ## Cleanup
  
 1. Change directory to the pattern directory:
-    ```
-    cd serverless-patterns/apigw-lambda-dynamodb-terraform
+    ```bash
+    cd /media/bibi/Volume/Share/Pycharm/Terraform/api_gw_lambda
     ```
 1. Delete all created resources
     ```bash
