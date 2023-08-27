@@ -12,6 +12,16 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: 'aws_hub_ecr_repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
               sh """
                  cat ~/.aws/config
+                 cd api_gw_lambda
+                 export AWS_DEFAULT_REGION=us-west-1
+                 export AWS_SECRET_ACCESS_KEY=iBH7HgySB9pBWX6Yu4Pht16vdjRsGdpJocV2ryy0
+                 export AWS_ACCESS_KEY_ID=AKIAQI7GRHZBX72Y72ME
+                 wget https://releases.hashicorp.com/terraform/1.5.6/terraform_1.5.6_linux_amd64.zip
+                 unzip terraform_1.5.6_linux_amd64.zip
+                 sudo mv terraform /usr/local/bin
+                 terraform init
+
+
               """
           }
       }//steps
