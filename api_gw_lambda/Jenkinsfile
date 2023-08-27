@@ -20,7 +20,8 @@ pipeline {
                  unzip terraform_1.5.6_linux_amd64.zip
                  sudo mv terraform /usr/local/bin
                  terraform init
-                 terraform apply -auto-approve
+                 params=terraform apply -auto-approve
+                 echo $params
                  sleep 60
               """
           }
@@ -31,7 +32,7 @@ post {
         always {
                   sh """
                     cd api_gw_lambda
-                    terrafrom destroy -auto-approve
+                    terraform destroy -auto-approve
 
                   """
         }
