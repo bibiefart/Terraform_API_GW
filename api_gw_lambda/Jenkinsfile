@@ -12,26 +12,6 @@ pipeline {
           withCredentials([usernamePassword(credentialsId: 'aws_hub_ecr_repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
               sh """
                  cat ~/.aws/config
-                 cd api_gw_lambda
-                 export AWS_DEFAULT_REGION=us-west-1
-                 export AWS_SECRET_ACCESS_KEY=iBH7HgySB9pBWX6Yu4Pht16vdjRsGdpJocV2ryy0
-                 export AWS_ACCESS_KEY_ID=AKIAQI7GRHZBX72Y72ME
-                 wget https://releases.hashicorp.com/terraform/1.5.6/terraform_1.5.6_linux_amd64.zip
-                 unzip terraform_1.5.6_linux_amd64.zip
-                 sudo mv terraform /usr/local/bin
-                 terraform init
-                 terraform apply -auto-approve
-                 royal_cognito_user_pool_arn=`terraform output royal_cognito_user_pool_arn`
-                 royal_cognito_user_pool_endpoint=`terraform output royal_cognito_user_pool_endpoint`
-                 royal_cognito_user_pool_name=`terraform output royal_cognito_user_pool_name`
-                 royal_user_pool_client_id=`terraform output royal_user_pool_client_id`
-                 royal_user_pool_id=`terraform output royal_user_pool_id`
-                 echo $royal_cognito_user_pool_arn
-                 echo $royal_cognito_user_pool_endpoint
-                 echo $royal_cognito_user_pool_name
-                 echo $royal_user_pool_client_id
-                 echo $royal_user_pool_id
-                 sleep 60
               """
           }
       }//steps
