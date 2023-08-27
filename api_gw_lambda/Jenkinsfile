@@ -21,19 +21,16 @@ pipeline {
                  sudo mv terraform /usr/local/bin
                  terraform init
                  terraform apply --auto-approve
-                 "terraform output royal_cognito_user_pool_arn > tmp.txt"
-                 "terraform output royal_cognito_user_pool_endpoint >> tmp.txt"
-                 "terraform output royal_cognito_user_pool_name >> tmp.txt"
-                 "terraform output royal_user_pool_client_id >> tmp.txt"
-                 "terraform output royal_user_pool_id >> tmp.txt"
+                 terraform output -json | jq -r 'to_entries[] | .key + "=" + (.value.value | tostring)' | while read -r line ; do echo export "$line"; done > env.sh
+                 source env.sh
               """
               script
               {
-                 royal_cognito_user_pool_arn = sh(returnStdout: true, script: "cat tmp.txt | grep royal_cognito_user_pool_arn").trim()
-                 royal_cognito_user_pool_endpoint = sh(returnStdout: true, script: "cat tmp.txt | grep royal_cognito_user_pool_endpoint").trim()
-                 royal_cognito_user_pool_name = sh(returnStdout: true, script: "cat tmp.txt | grep royal_cognito_user_pool_name").trim()
-                 royal_user_pool_client_id = sh(returnStdout: true, script: "cat tmp.txt | grep royal_user_pool_client_id").trim()
-                 royal_user_pool_id = sh(returnStdout: true, script: "cat tmp.txt | grep royal_user_pool_id").trim()
+                 sh(returnStdout: true, script: "echo grep $royal_cognito_user_pool_arn").trim()
+                 sh(returnStdout: true, script: "echo $royal_cognito_user_pool_endpoint").trim()
+                 sh(returnStdout: true, script: "echo $royal_cognito_user_pool_name").trim()
+                 sh(returnStdout: true, script: "echo $royal_user_pool_client_id").trim()
+                 sh(returnStdout: true, script: "echo $royal_user_pool_id").trim()
               }
               sh """
                  echo "royal_cognito_user_pool_arn: ${royal_cognito_user_pool_arn}"
