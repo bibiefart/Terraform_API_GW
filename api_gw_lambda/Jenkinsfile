@@ -23,11 +23,14 @@ pipeline {
                  terraform apply --auto-approve
                  terraform output royal_cognito_user_pool_arn
               """
+              script
+              {
                  royal_cognito_user_pool_arn = sh(returnStdout: true, script: "terraform output royal_cognito_user_pool_arn").trim()
                  royal_cognito_user_pool_endpoint = sh(script: "terraform output royal_cognito_user_pool_endpoint").trim()
                  royal_cognito_user_pool_name = sh(returnStdout: true, script: "terraform output royal_cognito_user_pool_name").trim()
                  royal_user_pool_client_id = sh(returnStdout: true, script: "terraform output royal_user_pool_client_id").trim()
                  royal_user_pool_id = sh(returnStdout: true, script: "terraform output royal_user_pool_id").trim()
+              }
               sh """
                  echo "royal_cognito_user_pool_arn: ${royal_cognito_user_pool_arn}"
                  echo "royal_cognito_user_pool_endpoint: ${royal_cognito_user_pool_endpoint}"
