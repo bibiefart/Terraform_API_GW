@@ -20,7 +20,7 @@ pipeline {
                  unzip terraform_1.5.6_linux_amd64.zip
                  sudo mv terraform /usr/local/bin
                  terraform init
-                 terraform apply
+                 terraform apply -auto-approve
                  sleep 60
               """
           }
@@ -30,7 +30,6 @@ pipeline {
 post {
         always {
                   sh """
-                    cd microservices-in-two-pods-fleet-dynamic-ebs
                     cd api_gw_lambda
                     terrafrom destroy
 
