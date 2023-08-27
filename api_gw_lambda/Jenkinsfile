@@ -22,7 +22,7 @@ pipeline {
                  sudo mv terraform /usr/local/bin
                  terraform init
                  terraform apply -auto-approve
-                 x=${terraform output royal_cognito_user_pool_arn}
+                 terraform output royal_cognito_user_pool_arn
               """
 
                      royal_cognito_user_pool_arn = sh(script: "terraform output royal_cognito_user_pool_arn", returnStdout: true)
