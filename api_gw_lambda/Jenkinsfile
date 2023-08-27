@@ -34,7 +34,21 @@ pipeline {
                  sleep 60
 
               """
-          }
+              script{
+                     royal_cognito_user_pool_arn = readFile('terraform output royal_cognito_user_pool_arn').trim()
+                     sh "echo $royal_cognito_user_pool_arn"
+                     royal_cognito_user_pool_endpoint = readFile('terraform output royal_cognito_user_pool_endpoint').trim()
+                     sh "echo royal_cognito_user_pool_endpoint"
+                     royal_cognito_user_pool_name = readFile('terraform output royal_cognito_user_pool_name').trim()
+                     sh "echo royal_cognito_user_pool_name"
+                     royal_user_pool_client_id = readFile('terraform output royal_user_pool_client_id').trim()
+                     sh "echo royal_user_pool_client_id"
+                     royal_user_pool_id = readFile('terraform output royal_user_pool_id').trim()
+                     sh "echo royal_user_pool_id"
+                    }
+
+
+          }//withCredentials
       }//steps
     }//stage
   }//stages
