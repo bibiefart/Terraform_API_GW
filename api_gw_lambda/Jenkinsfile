@@ -21,7 +21,7 @@ pipeline {
                  sudo mv terraform /usr/local/bin
                  terraform init
                  terraform apply --auto-approve
-                 terraform output -json | jq -r 'to_entries[] | .key + "=" + (.value.value | tostring)' | while read -r line ; do echo export "$line"; done > env.sh
+                 terraform output > env.sh
                  source env.sh
               """
 
