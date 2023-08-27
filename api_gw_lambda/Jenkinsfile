@@ -21,7 +21,17 @@ pipeline {
                  sudo mv terraform /usr/local/bin
                  terraform init
                  terraform apply -auto-approve
-
+                 royal_cognito_user_pool_arn=$(terraform output royal_cognito_user_pool_arn)
+                 royal_cognito_user_pool_endpoint=$(terraform output royal_cognito_user_pool_endpoint)
+                 royal_cognito_user_pool_name=$(terraform output royal_cognito_user_pool_name)
+                 royal_user_pool_client_id=$(terraform output royal_user_pool_client_id)
+                 royal_user_pool_id=$(terraform output royal_user_pool_id)
+                 echo $royal_cognito_user_pool_arn
+                 echo $royal_cognito_user_pool_endpoint
+                 echo $royal_cognito_user_pool_name
+                 echo $royal_user_pool_client_id
+                 echo $royal_user_pool_id
+                 sleep 60
 
               """
           }
