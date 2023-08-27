@@ -23,15 +23,15 @@ pipeline {
                  terraform apply -auto-approve
               """
               script{
-                     royal_cognito_user_pool_arn = readFile('terraform output royal_cognito_user_pool_arn').trim()
+                     royal_cognito_user_pool_arn = sh(script: 'terraform output royal_cognito_user_pool_arn', returnStdout: true)
                      sh "echo $royal_cognito_user_pool_arn"
-                     royal_cognito_user_pool_endpoint = readFile('terraform output royal_cognito_user_pool_endpoint').trim()
+                     royal_cognito_user_pool_endpoint = sh(script: 'terraform output royal_cognito_user_pool_endpoint', returnStdout: true)
                      sh "echo royal_cognito_user_pool_endpoint"
-                     royal_cognito_user_pool_name = readFile('terraform output royal_cognito_user_pool_name').trim()
+                     royal_cognito_user_pool_name = sh(script: 'terraform output royal_cognito_user_pool_name', returnStdout: true)
                      sh "echo royal_cognito_user_pool_name"
-                     royal_user_pool_client_id = readFile('terraform output royal_user_pool_client_id').trim()
+                     royal_user_pool_client_id = sh(script: 'terraform output royal_user_pool_client_id', returnStdout: true)
                      sh "echo royal_user_pool_client_id"
-                     royal_user_pool_id = readFile('terraform output royal_user_pool_id').trim()
+                     royal_user_pool_id = sh(script: ('terraform output royal_user_pool_id', returnStdout: true)
                      sh "echo royal_user_pool_id"
                      sh "sleep 60"
                     }
