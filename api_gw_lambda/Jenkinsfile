@@ -33,6 +33,7 @@ post {
                     cd microservices-in-two-pods-fleet-dynamic-ebs
                     cd api_gw_lambda
                     terrafrom destroy
+
                   """
         }
   }
