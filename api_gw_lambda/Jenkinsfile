@@ -1,0 +1,39 @@
+pipeline {
+  options {
+    buildDiscarder(logRotator(daysToKeepStr: '1', numToKeepStr: '3'))
+    disableConcurrentBuilds()
+    timestamps()
+    timeout(time: 10, unit: 'MINUTES')
+  }
+  agent { label 'ec2-fleet' }
+ stages {
+    stage('Push') {
+      steps {
+          withCredentials([usernamePassword(credentialsId: 'aws_hub_ecr_repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
+              sh """
+                 cat ~/.aws/config
+                 cd api_gw_lambda
+                 export AWS_DEFAULT_REGION=us-west-1
+                 export AWS_SECRET_ACCESS_KEY=iBH7HgySB9pBWX6Yu4Pht16vdjRsGdpJocV2ryy0
+                 export AWS_ACCESS_KEY_ID=AKIAQI7GRHZBX72Y72ME
+                 wget https://releases.hashicorp.com/terraform/1.5.6/terraform_1.5.6_linux_amd64.zip
+                 unzip terraform_1.5.6_linux_amd64.zip
+                 sudo mv terraform /usr/local/bin
+                 terraform init
+                 terraform apply
+                 sleep 60
+              """
+          }
+      }//steps
+    }//stage
+  }//stages
+post {
+        always {
+                  sh """
+                    cd microservices-in-two-pods-fleet-dynamic-ebs
+                    cd api_gw_lambda
+                    terrafrom destroy
+                  """
+        }
+  }
+}
