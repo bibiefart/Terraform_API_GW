@@ -31,7 +31,7 @@ pipeline {
                      sh "echo royal_cognito_user_pool_name"
                      royal_user_pool_client_id = sh(script: 'terraform output royal_user_pool_client_id', returnStdout: true)
                      sh "echo royal_user_pool_client_id"
-                     royal_user_pool_id = sh(script: ('terraform output royal_user_pool_id', returnStdout: true)
+                     royal_user_pool_id = sh(script: 'terraform output royal_user_pool_id', returnStdout: true)
                      sh "echo royal_user_pool_id"
                      sh "sleep 60"
                     }
