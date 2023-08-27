@@ -7,10 +7,9 @@ pipeline {
   }
   agent { label 'ec2-fleet' }
  stages {
-    stage('Push') {
+    stage('Terraform') {
       steps {
           withCredentials([usernamePassword(credentialsId: 'aws_hub_ecr_repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-          script{
               sh """
                  cat ~/.aws/config
                  cd api_gw_lambda
@@ -21,23 +20,21 @@ pipeline {
                  unzip terraform_1.5.6_linux_amd64.zip
                  sudo mv terraform /usr/local/bin
                  terraform init
-                 terraform apply -auto-approve
+                 terraform apply --auto-approve
                  terraform output royal_cognito_user_pool_arn
               """
+                 royal_cognito_user_pool_arn = sh(returnStdout: true, script: "terraform output royal_cognito_user_pool_arn").trim()
+                 royal_cognito_user_pool_endpoint = sh(script: "terraform output royal_cognito_user_pool_endpoint").trim()
+                 royal_cognito_user_pool_name = sh(returnStdout: true, script: "terraform output royal_cognito_user_pool_name").trim()
+                 royal_user_pool_client_id = sh(returnStdout: true, script: "terraform output royal_user_pool_client_id").trim()
+                 royal_user_pool_id = sh(returnStdout: true, script: "terraform output royal_user_pool_id").trim()
+                 echo "royal_cognito_user_pool_arn: ${royal_cognito_user_pool_arn}"
+                 echo "royal_cognito_user_pool_endpoint: ${royal_cognito_user_pool_endpoint}"
+                 echo "royal_cognito_user_pool_name: ${royal_cognito_user_pool_name}"
+                 echo "royal_user_pool_client_id: ${royal_user_pool_client_id}"
+                 echo "royal_user_pool_id: ${royal_user_pool_id}"
+                 sleep 60
 
-                     royal_cognito_user_pool_arn = sh(script: "terraform output royal_cognito_user_pool_arn", returnStdout: true)
-                     royal_cognito_user_pool_endpoint = sh(script: "terraform output royal_cognito_user_pool_endpoint", returnStdout: true)
-                     royal_cognito_user_pool_name = sh(script: "terraform output royal_cognito_user_pool_name", returnStdout: true)
-                     royal_user_pool_client_id = sh(script: "terraform output royal_user_pool_client_id", returnStdout: true)
-                     royal_user_pool_id = sh(script: "terraform output royal_user_pool_id", returnStdout: true)
-                     echo "royal_cognito_user_pool_arn: ${royal_cognito_user_pool_arn}"
-                     echo "royal_cognito_user_pool_endpoint: ${royal_cognito_user_pool_endpoint}"
-                     echo "royal_cognito_user_pool_name: ${royal_cognito_user_pool_name}"
-                     echo "royal_user_pool_client_id: ${royal_user_pool_client_id}"
-                     echo "royal_user_pool_id: ${royal_user_pool_id}"
-                     sleep 60
-
-                    }
 
 
 
