@@ -24,17 +24,6 @@ pipeline {
                  terraform output -json | jq -r 'to_entries[] | .key + "=" + (.value.value | tostring)' | while read -r line ; do echo export "$line"; done > env.sh
                  source env.sh
               """
-              sh """
-                 echo "royal_cognito_user_pool_arn: ${royal_cognito_user_pool_arn}"
-                 echo "royal_cognito_user_pool_endpoint: ${royal_cognito_user_pool_endpoint}"
-                 echo "royal_cognito_user_pool_name: ${royal_cognito_user_pool_name}"
-                 echo "royal_user_pool_client_id: ${royal_user_pool_client_id}"
-                 echo "royal_user_pool_id: ${royal_user_pool_id}"
-                 sleep 60
-              """
-
-
-
 
           }//withCredentials
       }//steps
