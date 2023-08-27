@@ -20,11 +20,11 @@ pipeline {
                  unzip terraform_1.5.6_linux_amd64.zip
                  sudo mv terraform /usr/local/bin
                  terraform init
-                 terraform apply --auto-approve
-                 terraform output royal_cognito_user_pool_arn
+
               """
               script
               {
+                sh(returnStdout: true, script: "terraform apply --auto-approve ").trim()
                  royal_cognito_user_pool_arn = sh(returnStdout: true, script: "terraform refresh ; terraform output royal_cognito_user_pool_arn").trim()
                  royal_cognito_user_pool_endpoint = sh(returnStdout: true, script: "terraform refresh ;terraform output royal_cognito_user_pool_endpoint").trim()
                  royal_cognito_user_pool_name = sh(returnStdout: true, script: "terraform refresh ;terraform output royal_cognito_user_pool_name").trim()
