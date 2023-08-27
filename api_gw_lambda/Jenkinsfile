@@ -23,7 +23,6 @@ pipeline {
                  terraform init
                  terraform apply -auto-approve
                  x=${terraform output royal_cognito_user_pool_arn}
-                 echo $x
               """
 
                      royal_cognito_user_pool_arn = sh(script: "terraform output royal_cognito_user_pool_arn", returnStdout: true)
