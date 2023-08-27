@@ -29,12 +29,15 @@ pipeline {
                      royal_user_pool_client_id = sh(script: 'terraform output royal_user_pool_client_id', returnStdout: true)
                      royal_user_pool_id = sh(script: 'terraform output royal_user_pool_id', returnStdout: true)
                     }
-                     sh "echo ${royal_cognito_user_pool_arn}"
-                     sh "echo royal_cognito_user_pool_endpoint"
-                     sh "echo royal_cognito_user_pool_name"
-                     sh "echo royal_user_pool_client_id"
-                     sh "echo royal_user_pool_id"
-                     sh "sleep 60"
+                    sh """
+                    echo ${royal_cognito_user_pool_arn}
+                    echo ${royal_cognito_user_pool_endpoint}
+                    echo ${royal_cognito_user_pool_name}
+                    echo ${royal_user_pool_client_id}
+                    echo ${royal_user_pool_id}
+                    sleep 60"
+                    """
+
 
 
 
