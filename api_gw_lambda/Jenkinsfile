@@ -10,7 +10,8 @@ pipeline {
     stage('Push') {
       steps {
           withCredentials([usernamePassword(credentialsId: 'aws_hub_ecr_repo', passwordVariable: 'pass', usernameVariable: 'user')]) {
-              sh """
+          script{
+
                  cat ~/.aws/config
                  cd api_gw_lambda
                  export AWS_DEFAULT_REGION=us-west-1
@@ -21,8 +22,7 @@ pipeline {
                  sudo mv terraform /usr/local/bin
                  terraform init
                  terraform apply -auto-approve
-              """
-              script{
+
                      royal_cognito_user_pool_arn = sh(script: "terraform output royal_cognito_user_pool_arn", returnStdout: true)
                      royal_cognito_user_pool_endpoint = sh(script: "terraform output royal_cognito_user_pool_endpoint", returnStdout: true)
                      royal_cognito_user_pool_name = sh(script: "terraform output royal_cognito_user_pool_name", returnStdout: true)
