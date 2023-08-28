@@ -462,7 +462,7 @@ resource "aws_apigatewayv2_route" "delete" {
 
 
 resource "aws_cloudwatch_log_group" "api_gw" {
-  name = "/aws/api_gw/${var.apigw_name}-${random_string.random.id}"
+  name = "/aws/vendedlogs/${var.apigw_name}-${random_string.random.id}"
 
   retention_in_days = var.apigw_log_retention
 }
