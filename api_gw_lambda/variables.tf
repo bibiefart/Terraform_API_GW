@@ -73,7 +73,7 @@ variable "lambda_log_retention" {
 variable "apigw_log_retention" {
   description = "api gwy log retention in days"
   type = number
-  default = 7
+  default = 1
 }
 
 
