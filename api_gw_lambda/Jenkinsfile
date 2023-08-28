@@ -49,6 +49,8 @@ pipeline {
                  echo ${token}
                  echo "inserting DB and SQS"
                  curl -X POST ${api_gw_url}/movies --header "Authorization: ${token}" --header 'Content-Type: application/json' -d '{"year":1977, "title":"Starwars"}'
+                 echo "get - list DB"
+                 curl -X GET ${api_gw_url}/movies --header "Authorization: ${token}"
                  sleep 60
               """
 
