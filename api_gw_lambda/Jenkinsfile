@@ -39,7 +39,13 @@ pipeline {
                  aws configure set region 'eu-west-1'
                  aws cognito-idp sign-up --client-id ${royal_user_pool_client_id}  --username 'bibiefrat' --password 'a3bAcd01~' --user-attributes Name=name,Value='bibi' Name=email,Value='bibi.efrat@gmail.com'
                  aws cognito-idp admin-confirm-sign-up  --user-pool-id ${royal_user_pool_id} --username 'bibiefrat'
-                 aws cognito-idp initiate-auth --client-id ${royal_user_pool_client_id}  --auth-flow USER_PASSWORD_AUTH --auth-parameters USERNAME='bibiefrat',PASSWORD='a3bAcd01~' --query 'AuthenticationResult.IdToken' --output text
+                """
+                script
+              {
+                 token = sh(returnStdout: true, script: "aws configure set region 'eu-west-1' ; aws cognito-idp initiate-auth --client-id ${royal_user_pool_client_id}  --auth-flow USER_PASSWORD_AUTH --auth-parameters USERNAME='bibiefrat',PASSWORD='a3bAcd01~' --query 'AuthenticationResult.IdToken' --output text").trim()
+              }
+              sh"""
+                 echo ${token}
                  sleep 60
               """
 
