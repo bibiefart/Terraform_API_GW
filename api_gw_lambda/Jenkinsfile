@@ -24,6 +24,7 @@ pipeline {
               """
               script
               {
+                 api_gw_url = sh(returnStdout: true, script: "cd api_gw_lambda;  terraform output apigwy_url").trim()
                  royal_cognito_user_pool_arn = sh(returnStdout: true, script: "cd api_gw_lambda;  terraform output royal_cognito_user_pool_arn").trim()
                  royal_cognito_user_pool_endpoint = sh(returnStdout: true, script: "cd api_gw_lambda; terraform output royal_cognito_user_pool_endpoint").trim()
                  royal_cognito_user_pool_name = sh(returnStdout: true, script: "cd api_gw_lambda; terraform output royal_cognito_user_pool_name").trim()
@@ -46,6 +47,8 @@ pipeline {
               }
               sh"""
                  echo ${token}
+                 echo "inserting DB and SQS"
+                 curl -X POST ${api_gw_url}/movies --header "Authorization: ${token}" --header 'Content-Type: application/json' -d '{"year":1977, "title":"Starwars"}'
                  sleep 60
               """
 
