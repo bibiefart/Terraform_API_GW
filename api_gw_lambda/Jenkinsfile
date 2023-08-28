@@ -36,6 +36,9 @@ pipeline {
                  echo "royal_cognito_user_pool_name: ${royal_cognito_user_pool_name}"
                  echo "royal_user_pool_client_id: ${royal_user_pool_client_id}"
                  echo "royal_user_pool_id: ${royal_user_pool_id}"
+                 aws cognito-idp sign-up --client-id ${royal_user_pool_client_id}  --username 'bibiefrat' --password 'a3bAcd01~' --user-attributes Name=name,Value='bibi' Name=email,Value='bibi.efrat@gmail.com'
+                 aws cognito-idp admin-confirm-sign-up  --user-pool-id ${royal_user_pool_id} --username 'bibiefrat'
+                 aws cognito-idp initiate-auth --client-id ${royal_user_pool_client_id}  --auth-flow USER_PASSWORD_AUTH --auth-parameters USERNAME='bibiefrat',PASSWORD='a3bAcd01~' --query 'AuthenticationResult.IdToken' --output text
                  sleep 60
               """
 
