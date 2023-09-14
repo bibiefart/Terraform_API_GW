@@ -36,3 +36,15 @@ output "royal_cognito_user_pool_arn" {
 output "royal_cognito_user_pool_endpoint" {
     value =  module.royal_cognito.royal_cognito_user_pool_endpoint
 }
+
+output "get_lambda_arn" {
+  description = "arn of get lambda"
+
+  value = aws_lambda_function.apigw_lambda_ddb_get.arn
+}
+
+output "delete_lambda_arn" {
+  description = "arn of delete lambda"
+
+  value = aws_lambda_function.apigw_lambda_ddb_delete.arn
+}

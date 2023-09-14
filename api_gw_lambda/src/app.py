@@ -10,8 +10,8 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 dynamodb_client = boto3.client('dynamodb')
-
-
+sfn = boto3.client('stepfunctions')
+state_machine_arn = os.environ['STATE_MACHINE_ARN']
 
 def get_queue_url(queue_name):
     """Get the URL of the SQS queue to send events to."""
@@ -61,12 +61,17 @@ def lambda_handler(event, context):
       dynamodb_client.put_item(TableName=table,Item={"year": {'N':year}, "title": {'S':title}})
       sqs_send_message(item)
       message = "Successfully inserted data!"
+      response = sfn.start_execution(
+          stateMachineArn=state_machine_arn)
+
       return {
           "statusCode": 200,
-          "headers": {
-              "Content-Type": "application/json"
-          },
-          "body": json.dumps({"message": message})
+          "body": json.dumps(
+              {
+                  "year": str(item["year"]),
+                  "title": str(item["title"])
+              }
+          )
       }
   else:
       logging.info("## Received request without a payload")

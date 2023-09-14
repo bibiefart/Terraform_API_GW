@@ -14,9 +14,14 @@ dynamodb = boto3.resource('dynamodb')
 def lambda_handler(event, context):
   my_table = os.environ.get('DDB_TABLE')
   logging.info(f"## Loaded table name from environemt variable DDB_TABLE: {my_table}")
+  logging.info(f"{event}")
   # Determine the HTTP method of the request
-  http_method = event["httpMethod"]
-  if http_method == "GET":
+  try:
+      http_method = event["httpMethod"]
+  except:
+      http_method = None
+  #http_method = event["httpMethod"]
+  if http_method == "GET" or http_method == None:
       # Return the data in the response
       table = dynamodb.Table(my_table)
       response = table.scan()
