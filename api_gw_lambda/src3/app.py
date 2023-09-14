@@ -38,7 +38,7 @@ def lambda_handler(event, context):
           item = item["message"]
           year = item[item.find("('") + 2:item.rfind("')")]
           title = item[item.find("'title': ")+10:item.rfind("'}'")-2]
-          item = json.dumps({'year': int(year), 'title': title})
+          item = {'year': int(year), 'title': title}
           logging.info(f"item to delete --> {item}")
           response = table.delete_item(Key=item)
       status_code = response['ResponseMetadata']['HTTPStatusCode']
